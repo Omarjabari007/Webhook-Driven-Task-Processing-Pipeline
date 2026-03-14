@@ -1,19 +1,18 @@
 import express from "express";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { db } from "./db/index.js";
+import { sql } from "drizzle-orm";
 
 const app = express();
-
 app.use(express.json());
+
 const PORT = process.env.PORT || 3000;
 
-app.get("/health", (req, res) => {
-  res.json({
-    status: "ok",
-    message: "API working"
-  });
-});
+async function testDB() {
+  await db.execute(sql`SELECT 1`);
+  console.log("database connected");
+}
+
+testDB();
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
