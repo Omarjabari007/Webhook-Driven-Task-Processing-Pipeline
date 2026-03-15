@@ -4,6 +4,7 @@ import type { CreatePipelineDTO } from "./pipelines.types.ts";
 
 export async function createPipelineController(req : Request , res : Response){
     try{
+        console.log("BODY:", req.body)
         const data = req.body as CreatePipelineDTO
         const pipeline = await createPipeline(data)
         res.status(201).json(pipeline)

@@ -4,6 +4,6 @@ import { createPipeline } from "./pipelines.service.ts";
 
 const router = Router()
 
-router.post("/",createPipeline)
+router.post("/",createPipelineController)
 
 export default router
