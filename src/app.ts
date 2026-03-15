@@ -1,9 +1,11 @@
 import express from "express";
 import { db } from "./db/index.js";
 import { sql } from "drizzle-orm";
+import pipelinesRoutes from "./modules/pipelines/pipelines.routes.ts"
 
 const app = express();
 app.use(express.json());
+app.use("/pipelines" , pipelinesRoutes);
 
 const PORT = process.env.PORT || 3000;
 
@@ -13,6 +15,8 @@ async function testDB() {
 }
 
 testDB();
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
