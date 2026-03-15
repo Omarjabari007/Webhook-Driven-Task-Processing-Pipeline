@@ -18,7 +18,7 @@ export interface PipelineResponse {
     name: string;
     sourcePath: string;
     actionType: pipelineActionType;
-    config: PipelineConfig;
+    config: PipelineConfig | null;
     createdAt: Date;
 }
 
