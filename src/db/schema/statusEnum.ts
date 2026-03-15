@@ -7,3 +7,8 @@ export const jobStatus = pgEnum("job_status" , [
     "failed"
 ]);
 
+export const deliveryStatus = pgEnum("delivery_status" , [
+    "pending",
+    "success",
+    "failed",
+]);
