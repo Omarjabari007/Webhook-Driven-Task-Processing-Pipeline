@@ -1,6 +1,7 @@
 import {db} from "../../db/index.ts"
 import {pipelines} from "../../db/schema/pipelines.ts"
 import { mapPipeline } from "../../mappers/pipeline.mapper.ts"
+import { eq } from "drizzle-orm"
 
 import type { CreatePipelineDTO , PipelineResponse } from "./pipelines.types.ts"
 
@@ -19,3 +20,16 @@ export async function createPipeline(data:CreatePipelineDTO): Promise<PipelineRe
     }
     return mapPipeline(pipeline);
 } 
+
+export async function getPipelines() : Promise<PipelineResponse[]> {
+    const rows = await db.select().from(pipelines)
+    return rows.map(mapPipeline);
+}
+
+export async function getPipelineById(id : string) : Promise<PipelineResponse | null> {
+    const rows = await db.select().from(pipelines).where(eq(pipelines.id , id))
+    if(rows.length === 0){
+        return null
+    }
+    return mapPipeline(rows[0]);
+}
