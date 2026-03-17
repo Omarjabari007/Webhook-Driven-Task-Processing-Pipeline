@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { createPipelineController } from "./pipelines.controller.ts";
-import { createPipeline } from "./pipelines.service.ts";
+import { createPipelineController ,getPipelineByIdController , getPipelinesController } from "./pipelines.controller.ts";
 
 const router = Router()
 
 router.post("/",createPipelineController)
+router.get("/", getPipelinesController)
+router.get("/:id" , getPipelineByIdController)
 
 export default router
