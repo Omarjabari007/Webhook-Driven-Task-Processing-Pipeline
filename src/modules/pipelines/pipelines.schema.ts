@@ -12,5 +12,7 @@ export const PipelineCreationSchema = z.object({
 })
 
 export const pipelineIdSchema = z.object({
-    id: z.string().uuid()
+    params: z.object({
+        id: z.string().uuid()
+    })
 })

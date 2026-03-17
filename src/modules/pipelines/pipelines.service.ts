@@ -36,5 +36,8 @@ export async function getPipelineById(id : string) : Promise<PipelineResponse> {
 }
 
 export async function deletePipeline(id : string): Promise<void> {
-    await db.delete(pipelines).where(eq(pipelines.id , id))
+    const result = await db.delete(pipelines).where(eq(pipelines.id , id)).returning()
+    if(result.length === 0){
+        throw new AppError("Pipeline not found" , 404);
+    }
 }
