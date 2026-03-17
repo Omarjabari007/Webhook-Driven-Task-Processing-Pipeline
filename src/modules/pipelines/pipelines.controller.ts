@@ -1,5 +1,5 @@
 import type { Request , Response } from "express";
-import {createPipeline , getPipelines , getPipelineById} from "./pipelines.service.ts"
+import {createPipeline , getPipelines , getPipelineById , deletePipeline} from "./pipelines.service.ts"
 import type { CreatePipelineDTO } from "./pipelines.types.ts";
 
 export async function createPipelineController(req : Request , res : Response){
@@ -41,5 +41,19 @@ export async function getPipelineByIdController ( req : Request , res : Response
     catch(error){
         console.error(error);
         res.status(500).json({message : "Failed to fetch pipeline by id"})
+    }
+}
+
+export async function deletePipelineController( req:Request , res : Response) {
+    try{
+        const {id} = req.params;
+        if (!id || Array.isArray(id)) {
+            return res.status(400).json({ message: "Invalid pipeline id" })
+        }
+        await deletePipeline(id)
+        res.status(204).send()
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message : "Failed to delete pipeline"})
     }
 }

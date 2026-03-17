@@ -33,3 +33,7 @@ export async function getPipelineById(id : string) : Promise<PipelineResponse | 
     }
     return mapPipeline(rows[0]);
 }
+
+export async function deletePipeline(id : string): Promise<void> {
+    await db.delete(pipelines).where(eq(pipelines.id , id))
+}
