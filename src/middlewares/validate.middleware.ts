@@ -16,7 +16,7 @@ export function validate<T extends ZodTypeAny>(schema: T){
             query: req.query
         });
         if(!result.success){
-            const message = result.error.issues.map((e) => e.message).join(", ");
+            const message = result.error.issues.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ");
             return next(new AppError(message, 400));
         }
         const data = result.data as z.infer<T> & RequestSchema;
