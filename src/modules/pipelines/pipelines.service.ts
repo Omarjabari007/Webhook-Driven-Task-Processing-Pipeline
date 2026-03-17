@@ -4,6 +4,7 @@ import { mapPipeline } from "../../mappers/pipeline.mapper.ts"
 import { eq } from "drizzle-orm"
 
 import type { CreatePipelineDTO , PipelineResponse } from "./pipelines.types.ts"
+import { AppError } from "../../utils/AppError.ts"
 
 export async function createPipeline(data:CreatePipelineDTO): Promise<PipelineResponse>{
     const result = await db.insert(pipelines)
@@ -16,7 +17,7 @@ export async function createPipeline(data:CreatePipelineDTO): Promise<PipelineRe
     .returning();
     const pipeline = result[0]
     if(!pipeline){
-        throw new Error("Failed to create pipeline");
+        throw new AppError("Failed to create pipeline" , 500);
     }
     return mapPipeline(pipeline);
 } 
@@ -26,10 +27,10 @@ export async function getPipelines() : Promise<PipelineResponse[]> {
     return rows.map(mapPipeline);
 }
 
-export async function getPipelineById(id : string) : Promise<PipelineResponse | null> {
+export async function getPipelineById(id : string) : Promise<PipelineResponse> {
     const rows = await db.select().from(pipelines).where(eq(pipelines.id , id))
     if(rows.length === 0){
-        return null
+        throw new AppError("Pipeline not found" , 404);
     }
     return mapPipeline(rows[0]);
 }
