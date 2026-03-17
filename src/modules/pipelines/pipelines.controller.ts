@@ -1,12 +1,8 @@
 import type { Request , Response } from "express";
 import {createPipeline , getPipelines , getPipelineById , deletePipeline} from "./pipelines.service.ts"
-import type { CreatePipelineDTO } from "./pipelines.types.ts";
-import { AppError } from "../../utils/AppError.ts";
 
 export async function createPipelineController(req : Request , res : Response){
-        console.log("BODY:", req.body)
-        const data = req.body as CreatePipelineDTO
-        const pipeline = await createPipeline(data)
+        const pipeline = await createPipeline(req.body)
         res.status(201).json(pipeline)
 }
 
@@ -16,20 +12,13 @@ export async function getPipelinesController(req : Request , res : Response){
 }
 
 export async function getPipelineByIdController ( req : Request , res : Response){
-        const { id } = req.params
-
-        if (!id || Array.isArray(id)) {
-            throw new AppError("Invalid pipeline id", 400);
-        }
+        const id = req.params.id as string;
         const pipeline = await getPipelineById(id);
-        res.json(pipeline)
+        res.json(pipeline);
 }
 
 export async function deletePipelineController( req:Request , res : Response) {
-        const {id} = req.params;
-        if (!id || Array.isArray(id)) {
-            throw new AppError("Invalid pipeline id" , 400);
-        }
+        const id = req.params.id as string;
         await deletePipeline(id)
         res.status(204).send()    
 }
