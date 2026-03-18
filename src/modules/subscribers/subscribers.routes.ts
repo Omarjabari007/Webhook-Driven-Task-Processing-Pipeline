@@ -11,10 +11,10 @@ const router = Router();
 router.post("/pipelines/:pipelineId/subscribers",validate(SubscriberCreationSchema,),
 asyncHandler(createSubscriberController));
 
-router.get("/pipelines/:pipelineId/subscribers",validate(subscriberIdSchema),
+router.get("/pipelines/:pipelineId/subscribers",validate(pipelineIdSchema),
  asyncHandler(getSubscribersController));
 
-router.delete("/subscribers/:id", validate(pipelineIdSchema),
+router.delete("/subscribers/:id", validate(subscriberIdSchema),
  asyncHandler(deleteSubscriberController));
 
 export default router;
