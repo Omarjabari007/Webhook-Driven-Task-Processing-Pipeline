@@ -23,10 +23,11 @@ export async function createSubscriber( pipelineId: string, data: CreateSubscrib
     }
     return subscriber;
   } catch (err: any) {
-    if (err.code === "23505") {
-      throw new AppError("Subscriber already exists for this pipeline", 409);
+    const code = err.code || err.cause?.code;
+    if(code === "23505"){
+        throw new AppError("Subscriber already exist for this pipeline" , 409);
     }
-    throw err; 
+    throw err;
   }
 }
 
