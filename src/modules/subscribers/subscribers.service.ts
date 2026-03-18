@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { AppError } from "../../utils/AppError.ts";
 
 import type { CreateSubscriberDTO , SubscriberResponse } from "./subscribers.type.ts";
+import { pipe } from "zod";
 
 export async function createSubscriber(pipelineId: string , data: CreateSubscriberDTO)
 :Promise<SubscriberResponse>{
@@ -21,4 +22,8 @@ if (!subscriber) {
   throw new AppError("Failed to create subscriber", 500);
 }
 return subscriber;
+}
+
+export async function getSubscriberByPipeline(pipelineId: string): Promise<SubscriberResponse[]>{
+    return db.select().from(subscribers).where(eq(subscribers.pipelineId , pipelineId));
 }
