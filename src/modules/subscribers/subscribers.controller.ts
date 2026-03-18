@@ -1,5 +1,5 @@
 import type { Request , Response } from "express";
-import { createSubscriber , getSubscriberByPipeline } from "./subscribers.service.ts";
+import { createSubscriber , getSubscriberByPipeline , deleteSubscriber } from "./subscribers.service.ts";
 
 export async function createSubscriberController(req: Request , res : Response) {
     const pipelineId = req.params.pipelineId as string;
@@ -11,4 +11,10 @@ export async function getSubscribersController(req:Request , res : Response) {
     const pipelineId = req.params.pipelineId as string;
     const subscribers = await getSubscriberByPipeline(pipelineId);
     res.json(subscribers);
+}
+
+export async function deleteSubscriberController(req : Request , res : Response) {
+    const id = req.params.id as string;
+    await deleteSubscriber(id);
+    res.status(204).send();
 }
