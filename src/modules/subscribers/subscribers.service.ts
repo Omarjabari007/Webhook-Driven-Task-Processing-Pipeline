@@ -27,3 +27,10 @@ return subscriber;
 export async function getSubscriberByPipeline(pipelineId: string): Promise<SubscriberResponse[]>{
     return db.select().from(subscribers).where(eq(subscribers.pipelineId , pipelineId));
 }
+
+export async function deleteSubscriber(id: string): Promise<void> {
+    const result = await db.delete(subscribers).where(eq(subscribers.id,id)).returning();
+    if(result.length === 0){
+        throw new AppError("Subscriber not found" , 404);
+    }
+}
