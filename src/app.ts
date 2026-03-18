@@ -3,12 +3,14 @@ import { db } from "./db/index.js";
 import { sql } from "drizzle-orm";
 import pipelinesRoutes from "./modules/pipelines/pipelines.routes.ts"
 import { errorMiddleware } from "./middlewares/error.middleware.ts";
+import subsriberRoutes from "./modules/subscribers/subscribers.routes.ts";
 
 const app = express();
 
 app.use(express.json());
 
 app.use("/pipelines" , pipelinesRoutes);
+app.use(subsriberRoutes);
 
 app.use(errorMiddleware);
 
