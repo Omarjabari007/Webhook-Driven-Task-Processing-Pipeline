@@ -25,6 +25,10 @@ return subscriber;
 }
 
 export async function getSubscriberByPipeline(pipelineId: string): Promise<SubscriberResponse[]>{
+    const pipeline = await db.select().from(pipelines).where(eq(pipelines.id, pipelineId));
+    if(pipeline.length === 0){
+        throw new AppError("Pipeline not found" , 404);
+    }
     return db.select().from(subscribers).where(eq(subscribers.pipelineId , pipelineId));
 }
 
