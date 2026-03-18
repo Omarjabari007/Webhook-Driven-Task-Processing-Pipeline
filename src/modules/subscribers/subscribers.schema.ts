@@ -14,3 +14,9 @@ export const subscriberIdSchema = z.object({
         id: z.string().uuid()
     })
 })
+
+export const pipelineIdSchema = z.object({
+    params: z.object({
+        pipelineId: z.string().uuid()
+    })
+});

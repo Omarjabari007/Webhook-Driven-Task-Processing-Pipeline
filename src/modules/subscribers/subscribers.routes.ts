@@ -4,16 +4,17 @@ import { createSubscriberController , getSubscribersController , deleteSubscribe
 import { validate } from "../../middlewares/validate.middleware.ts";
 import { asyncHandler } from "../../utils/asyncHandler.ts";
 
-import { SubscriberCreationSchema , subscriberIdSchema} from "./subscribers.schema.ts";
+import { SubscriberCreationSchema , subscriberIdSchema , pipelineIdSchema} from "./subscribers.schema.ts";
 
 const router = Router();
 
 router.post("/pipelines/:pipelineId/subscribers",validate(SubscriberCreationSchema,),
 asyncHandler(createSubscriberController));
 
-router.get("/pipelines/:pipelineId/subscribers", asyncHandler(getSubscribersController));
+router.get("/pipelines/:pipelineId/subscribers",validate(subscriberIdSchema),
+ asyncHandler(getSubscribersController));
 
-router.delete("/subscribers/:id", validate(subscriberIdSchema),
+router.delete("/subscribers/:id", validate(pipelineIdSchema),
  asyncHandler(deleteSubscriberController));
 
 export default router;
