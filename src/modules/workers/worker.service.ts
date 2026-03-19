@@ -4,6 +4,7 @@ import { webhookEvents } from "../../db/schema/webhookEvents.ts";
 import { pipelines } from "../../db/schema/pipelines.ts"; 
 import { subscribers } from "../../db/schema/index.ts"; 
 import { eq } from "drizzle-orm";
+import fetch from "node-fetch";
 
 export async function processPendingJobs() {
   const pendingJobs = await db.select().from(jobs).where(eq(jobs.status, "pending"));
@@ -45,14 +46,16 @@ export async function processPendingJobs() {
       const subs = await db.select().from(subscribers).where(eq(subscribers.pipelineId, pipelineId));
 
       for (const sub of subs) {
+        console.log("Sending to:", sub.url);
         try {
-          await fetch(sub.url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(result)
-          });
+            const response = await fetch(sub.url , {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(result)
+            });
+            console.log("Response status:", response.status);
         } catch (err) {
-          console.error("Failed to send to subscriber:", sub.url);
+          console.error("Failed to send:",err);
         }
       }
 

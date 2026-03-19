@@ -1,7 +1,13 @@
-import { db } from "../../db/index.ts";
-import { jobs } from "../../db/schema/jobs.ts";
-import { eq } from "drizzle-orm";
+import { processPendingJobs } from "./worker.service.ts";
 
-export async function processPendingJobs() {
-    const pendingJobs = await db.select().from(jobs).where(eq(jobs.status, "pending"));
+async function startWorker() {
+    console.log("Worker Started...");
+    setInterval(async () => {
+        try{
+            await processPendingJobs();
+        }catch(err){
+            console.error("Worker error:", err);
+        }
+    },5000)
 }
+startWorker();
