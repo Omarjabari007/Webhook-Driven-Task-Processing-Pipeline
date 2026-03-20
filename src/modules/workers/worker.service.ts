@@ -3,8 +3,11 @@ import { jobs } from "../../db/schema/jobs.ts";
 import { webhookEvents } from "../../db/schema/webhookEvents.ts"; 
 import { pipelines } from "../../db/schema/pipelines.ts"; 
 import { subscribers } from "../../db/schema/index.ts"; 
+import { deliveries } from "../../db/schema/deliveries.ts";
 import { eq } from "drizzle-orm";
 import fetch from "node-fetch";
+
+const MAX_RETRIES = 3;
 
 export async function processPendingJobs() {
   const pendingJobs = await db.select().from(jobs).where(eq(jobs.status, "pending"));
@@ -47,6 +50,7 @@ export async function processPendingJobs() {
 
       for (const sub of subs) {
         console.log("Sending to:", sub.url);
+
         try {
             const response = await fetch(sub.url , {
                 method: "POST",
