@@ -11,7 +11,12 @@ const MAX_RETRIES = 3;
 export async function processPendingDeliveries() {
  console.log("Checking pending deliveries...");
   const pendingDeliveries = await db.select().from(deliveries).where(eq(deliveries.status, "pending"));
- console.log("Pending deliveries count:", pendingDeliveries.length);
+
+  if(pendingDeliveries.length === 0){
+    return;
+  }
+  console.log(`Processing ${pendingDeliveries.length} pending deliveries`);
+
   for (const delivery of pendingDeliveries) {
     try {
       if (delivery.attempts >= MAX_RETRIES) {
