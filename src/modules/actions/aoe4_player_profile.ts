@@ -1,4 +1,3 @@
-import { any } from "zod";
 import { db } from "../../db/index.ts";
 import { jobs } from "../../db/schema/jobs.ts";
 import { eq } from "drizzle-orm";
@@ -47,8 +46,7 @@ export async function aoe4ProfileAction(payload: any, job: any){
         rank: mode.mmr,
         rank_level: mode.rank_level,
         gamesPlayed: totalGames,wins,losses,winRate,
-        summary: `${apiData?.name} - ${apiData?.country} is ${mode.rank_level} 
-        and rating is: ${mode.rating} ${winRate} winRate`
+        summary: `${apiData?.name} - ${apiData?.country} is rank: ${mode.rank_level} and rating is: ${mode.rating} with winrate = ${winRate}`
   };
   
   return result;
