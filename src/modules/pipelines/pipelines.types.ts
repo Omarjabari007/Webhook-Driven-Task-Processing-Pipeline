@@ -1,4 +1,6 @@
-export type pipelineActionType = "aoe4_match_summary"; // add more later 
+export type pipelineActionType = 
+| "aoe4_match_summary"
+| "aoe4_player_profile"
 
 export interface Aoe4PipelineConfig {
     apiUrl: string;
