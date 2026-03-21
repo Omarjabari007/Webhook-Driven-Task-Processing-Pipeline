@@ -1,3 +1,4 @@
+import { any } from "zod";
 import { db } from "../../db/index.ts";
 import { jobs } from "../../db/schema/jobs.ts";
 import { eq } from "drizzle-orm";
@@ -28,15 +29,27 @@ export async function aoe4ProfileAction(payload: any, job: any){
         }
         return null;
     }
-    const player = apiData?.player;
+    const mode = apiData?.modes?.rm_solo;
+    if (!mode) {
+        throw new Error("Player has no rm_solo data");
+    }
+    const wins = mode.wins_count ?? 0;
+    const losses = mode.losses_count ?? 0;
+    const totalGames = mode.games_count ?? (wins + losses);
+
+    const winRate = mode.win_rate? `${mode.win_rate}%` :totalGames >0 
+    ? `${Math.round( (wins/totalGames) *100 )}%` :"N/A";
+
     const result = {
-        player: player?.name,
-        country: player?.country,
-        rating: player?.rating,
-        mmr: player?.mmr,
-        gamesPlayed: player?.games_count,
-        winRate: player?.win_rate,
-        summary: `${player?.name} (${player?.country}) has rating ${player?.rating} and MMR ${player?.mmr}`
+        player: apiData?.name,
+        country: apiData?.country,
+        rating: mode.rating,
+        rank: mode.mmr,
+        rank_level: mode.rank_level,
+        gamesPlayed: totalGames,wins,losses,winRate,
+        summary: `${apiData?.name} - ${apiData?.country} is ${mode.rank_level} 
+        and rating is: ${mode.rating} ${winRate} winRate`
   };
+  
   return result;
 }
