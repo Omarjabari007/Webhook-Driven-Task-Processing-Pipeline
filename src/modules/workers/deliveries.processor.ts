@@ -9,7 +9,6 @@ import { eq } from "drizzle-orm";
 const MAX_RETRIES = 3;
 
 export async function processPendingDeliveries() {
- console.log("Checking pending deliveries...");
   const pendingDeliveries = await db.select().from(deliveries).where(eq(deliveries.status, "pending"));
 
   if(pendingDeliveries.length === 0){
