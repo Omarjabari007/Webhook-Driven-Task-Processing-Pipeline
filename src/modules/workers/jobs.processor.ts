@@ -4,12 +4,9 @@ import { webhookEvents } from "../../db/schema/webhookEvents.ts";
 import { pipelines } from "../../db/schema/pipelines.ts";
 import { subscribers } from "../../db/schema/subscribers.ts";
 import { deliveries } from "../../db/schema/deliveries.ts";
-import { formatCiv } from "../../utils/format.ts";
-import type { Player } from "./types.ts";
 
 import { eq } from "drizzle-orm";
-
-const MAX_JOB_RETRIES = 5;
+import { actions } from "../actions/index.ts";
 
 export async function processPendingJobs() {
   const pendingJobs = await db.select().from(jobs).where(eq(jobs.status, "pending"));
@@ -26,73 +23,19 @@ export async function processPendingJobs() {
       const pipelineId = event.pipelineId;
       //get pipeline
       const [pipeline] = await db.select().from(pipelines).where(eq(pipelines.id, pipelineId));
-      if (!pipeline) throw new Error("Pipeline not found");
-      let result: any = null;
-
-      //aoe4
-      if (pipeline.actionType === "aoe4_match_summary") {
-        const matchId = payload?.matchId;
-        const profileId = payload?.profileId;
-
-        if (!matchId || !profileId) {
-          throw new Error("Invalid payload: missing matchId or profileId");
-        }
-
-        let apiData: any = null;
-
-        try {
-          const response = await fetch(
-            `https://aoe4world.com/api/v0/players/${profileId}/games/${matchId}`
-          );
-
-          if (!response.ok) {
-            throw new Error("Match not ready yet");
-          }
-          apiData = await response.json();
-        } catch (err) {
-          console.log(`Match ${matchId} not ready yet (attempt ${job.attempts})`);
-
-          const newAttempts = job.attempts + 1;
-
-          if (newAttempts >= MAX_JOB_RETRIES) {
-            await db.update(jobs)
-              .set({
-                status: "failed",
-                attempts: newAttempts,
-              }).where(eq(jobs.id, job.id));
-            console.log("Job failed after max retries:", job.id);
-          } else {
-            await db.update(jobs)
-              .set({
-                status: "pending",
-                attempts: newAttempts,
-              }).where(eq(jobs.id, job.id));
-            console.log("Retrying job later:", job.id);
-          }
-
-          continue;
-        }
-        //result
-        const teams = apiData?.teams || [];
-        const players: Player[] = teams.flat().map((p: any) => ({
-          name: p.name,
-          result: p.result,
-          civilization: p.civilization
-        }));
-
-        const winner = players.find(p => p.result === "win");
-        const loser = players.find(p => p.result === "loss");
-
-        const durationMinutes = Math.round(apiData.duration / 60);
-        result = {
-          matchId,
-          map: apiData.map,
-          duration: `${durationMinutes} minutes`,
-          players,
-          summary: winner && loser
-            ? `${winner.name} (${formatCiv(winner.civilization)}) defeated ${loser.name} (${formatCiv(loser.civilization)}) on ${apiData.map} in ${durationMinutes} minutes`
-            : `Match ${matchId} processed`
-        };
+      if (!pipeline){
+        throw new Error("Pipeline not found");
+      } 
+      //action
+      const handler = actions[pipeline.actionType as keyof typeof actions];
+      if(!handler){
+        throw new Error(`Unknown action type: ${pipeline.actionType}`);
+      }
+      //result
+      const result =  await handler(payload, job);
+      if(!result){
+        console.log("Action not ready, will retry:", job.id);
+        continue;
       }
       await db.update(jobs)
         .set({
@@ -115,7 +58,6 @@ export async function processPendingJobs() {
 
     } catch (err) {
       console.error("Job failed:", job.id, err);
-
       await db.update(jobs).set({ status: "failed" }).where(eq(jobs.id, job.id));
     }
   }
