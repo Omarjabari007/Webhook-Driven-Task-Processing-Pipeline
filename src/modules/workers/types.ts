@@ -3,3 +3,11 @@ export type Player = {
   result: "win" | "loss";
   civilization: string;
 };
+
+export type MatchSummaryResult = {
+  matchId: number;
+  map: string;
+  duration: string;
+  players: Player[];
+  summary: string;
+};
