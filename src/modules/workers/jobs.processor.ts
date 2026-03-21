@@ -27,17 +27,35 @@ export async function processPendingJobs() {
 
       //process based on action aoe4 for now
       let result: any = null;
+      const MAX_JOB_RETRIES = 5;
+
       if (pipeline.actionType === "aoe4_match_summary") {
         const matchId = payload?.matchId;
         if (!matchId) {
           throw new Error("Invalid payload: missing matchId");
         }
+        const isReady = job.attempts >= 2;
+        if (!isReady) {
+          console.log(`Match ${matchId} not ready yet (attempt ${job.attempts})`);
+          const newAttempts = job.attempts + 1;
+
+          if (newAttempts >= MAX_JOB_RETRIES) {
+            await db.update(jobs).set({
+              status: "failed",attempts: newAttempts,}).where(eq(jobs.id, job.id));
+              console.log("Job failed after max retries:", job.id);
+            }
+            else {
+              await db.update(jobs).set({
+          status: "pending",attempts: newAttempts,}).where(eq(jobs.id, job.id))
+          console.log("Retrying job later:", job.id);
+    }
+    continue; //skip delivery.
+  }
         //test data
         result = {
           summary: `Match ${matchId} processed`,
         };
       }
-
       //save the result
       await db.update(jobs).set({
         status: "completed",result,processedAt: new Date(),
