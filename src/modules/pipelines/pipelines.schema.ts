@@ -4,7 +4,7 @@ export const PipelineCreationSchema = z.object({
     body: z.object({
     name: z.string().min(3),
     sourcePath: z.string().min(1),
-    actionType: z.enum(["aoe4_match_summary","aoe4_player_profile"]),
+    actionType: z.enum(["aoe4_match_summary","aoe4_player_profile","aoe4_meta"]),
     config: z.object({
         apiUrl: z.string().url()
     }).optional() 
