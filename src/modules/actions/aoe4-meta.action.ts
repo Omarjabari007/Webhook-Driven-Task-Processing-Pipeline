@@ -80,7 +80,7 @@ export async function aoe4MetaAction(payload: any, job: any) {
     return {
         map: mapName,
         recommendedCivilization: bestCivName,
-        winRate: `${bestWinRate.toFixed(2)}%`,
+        winRate: `${bestWinRate.toFixed(4)}%`,
         insight: `${formatCiv(bestCivName)} performs strongly on ${mapName}`,
-        summary: `Tip: ${formatCiv(bestCivName)} is strong on ${mapName} (${bestWinRate.toFixed(1)}% win rate)`
+        summary: `Tip: ${formatCiv(bestCivName)} is strong on ${mapName} (${bestWinRate.toFixed(4)}% win rate)`
     }};
