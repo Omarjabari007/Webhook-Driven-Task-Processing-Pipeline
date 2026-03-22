@@ -23,7 +23,7 @@ export async function aoe4ProfileAction(payload: any, job: any){
             await db.update(jobs).set({ status: "failed", attempts: newAttempts })
             .where(eq(jobs.id ,job.id))
         }else{
-            await db.update(jobs).set({ status: "failed", attempts: newAttempts })
+            await db.update(jobs).set({ status: "pending", attempts: newAttempts })
             .where(eq(jobs.id,job.id))
         }
         return null;
