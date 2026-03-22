@@ -48,8 +48,8 @@ export async function aoe4MetaAction(payload: any, job: any) {
             summary: `No meta data available for ${mapName}`
         }
     }
-    const mapStats = statsData?.maps?.find(
-        (m: any) => m.name?.toLowerCase() === mapName.toLowerCase()
+    const mapStats = statsData?.data?.find(
+        (m: any) => m.map?.toLowerCase() === mapName.toLowerCase()
     )
     if (!mapStats || !mapStats.civilizations) {
         return {
@@ -58,20 +58,29 @@ export async function aoe4MetaAction(payload: any, job: any) {
              };
             }
   //find the best civs
-  const bestCiv = mapStats.civilizations.reduce(
-    (best: any, civ: any) => {
-        if (!best || civ.win_rate > best.win_rate) {
-            return civ;
-        }
-        return best;
-    }, null);
-    const civName = bestCiv?.civilization || "Unknown";
-    const winRate = bestCiv?.win_rate ?? "N/A";
+  const civEntries = Object.entries(mapStats.civilizations);
+  if(civEntries.length === 0){
+    return {
+        map: mapName,
+        summary: `No civilization stats found for ${mapName}`
+    }
+  }
+  let bestCivName = "";
+  let bestWinRate = 0;
+
+  for(const [civName, civData] of civEntries) {
+    if( (civData as any).win_rate > bestWinRate) {
+        bestWinRate = (civData as any).win_rate;
+        bestCivName = civName;
+    }
+  }
+  
+
 
     return {
         map: mapName,
-        recommendedCivilization: civName,
-        winRate: `${winRate}%`,
-        insight: `${formatCiv(civName)} performs strongly on ${mapName}`,
-        summary: `Tip: ${formatCiv(civName)} is strong on ${mapName} (${winRate}% win rate)`
+        recommendedCivilization: bestCivName,
+        winRate: `${bestWinRate.toFixed(2)}%`,
+        insight: `${formatCiv(bestCivName)} performs strongly on ${mapName}`,
+        summary: `Tip: ${formatCiv(bestCivName)} is strong on ${mapName} (${bestWinRate.toFixed(1)}% win rate)`
     }};
