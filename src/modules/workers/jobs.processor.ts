@@ -57,7 +57,12 @@ export async function processPendingJobs() {
       console.log(`Created ${subs.length} deliveries for job ${job.id}`);
 
     } catch (err) {
-      console.error("Job failed:", job.id, err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error({
+        message: "Job failed",
+        jobId: job.id,
+        error: errorMessage
+        });
       await db.update(jobs).set({ status: "failed" }).where(eq(jobs.id, job.id));
     }
   }
