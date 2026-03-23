@@ -6,6 +6,7 @@ import { errorMiddleware } from "./middlewares/error.middleware.ts";
 import subsriberRoutes from "./modules/subscribers/subscribers.routes.ts";
 import webhookRoutes from "./modules/webhooks/webhooks.routes.ts";
 import jobRoutes from "./modules/jobs/jobs.routes.ts";
+import metricsRoutes from "./modules/metrics/metrics.routes.ts";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/pipelines" , pipelinesRoutes);
 app.use(subsriberRoutes);
 app.use(webhookRoutes);
 app.use(jobRoutes);
+app.use(metricsRoutes);
 
 app.use(errorMiddleware);
 
