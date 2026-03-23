@@ -11,3 +11,8 @@ export type MatchSummaryResult = {
   players: Player[];
   summary: string;
 };
+
+export type JobResult = {
+  summary?: string;
+  [key: string]: any;
+}
