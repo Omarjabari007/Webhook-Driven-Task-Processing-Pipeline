@@ -24,3 +24,19 @@ export async function getJobDeliveries(jobId: string) {
   }
   return db.select().from(deliveries).where(eq(deliveries.jobId, jobId));
 }
+
+export async function replayJob(jobId: string) {
+  const [job] = await db.select().from(jobs).where(eq(jobs.id, jobId));
+  if(!job){
+    throw new AppError("Job not found", 404);
+  }
+  const [newJob] = await db.insert(jobs).values({
+    eventId: job.eventId,
+    status: "pending",
+    attempts: 0
+  }).returning();
+  return {
+    message: "Job replayed",
+    newJobId: newJob?.id
+  }
+}
