@@ -13,9 +13,8 @@ export const deliveries = pgTable("deliveries" , {
     nextRetryAt: timestamp("next_retry_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 },(table) => ({
-    statusIdx: index("deliveries_status_idx").on(table.status),
+    statusRetryIdx: index("deliveries_status_retry_idx").on(table.status, table.nextRetryAt),
     jobIdx: index("deliveries_job_id_idx").on(table.jobId),
-    retryIdx: index("deliveries_next_retry_idx").on(table.nextRetryAt),
 })
 );
 
