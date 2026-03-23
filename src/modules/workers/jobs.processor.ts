@@ -5,8 +5,9 @@ import { pipelines } from "../../db/schema/pipelines.ts";
 import { subscribers } from "../../db/schema/subscribers.ts";
 import { deliveries } from "../../db/schema/deliveries.ts";
 
-import { eq } from "drizzle-orm";
+import { eq } from "drizzle-orm"; 
 import { actions } from "../actions/index.ts";
+const MAX_JOB_RETRIES = 3;
 
 export async function processPendingJobs() {
   const pendingJobs = await db.select().from(jobs).where(eq(jobs.status, "pending"));
@@ -33,11 +34,25 @@ export async function processPendingJobs() {
       }
       //result
       const result =  await handler(payload, job);
-      if(!result){
-        console.log("Action not ready, will retry:", job.id);
-        continue;
-      }
-      await db.update(jobs)
+
+      if (!result) {
+        const newAttempts = job.attempts + 1;
+        if (newAttempts >= MAX_JOB_RETRIES) {
+          console.error(`Job ${job.id} reached max retries`);
+          await db.update(jobs).set({
+            status: "failed",
+            attempts: newAttempts,
+          }).where(eq(jobs.id, job.id));
+            } else {
+              console.log(`Retrying job ${job.id} (attempt ${newAttempts})`);
+              await db.update(jobs).set({
+                status: "pending",
+                attempts: newAttempts,
+          }).where(eq(jobs.id, job.id));
+           }
+          continue; }
+      
+await db.update(jobs)
         .set({
           status: "completed",
           result,
@@ -56,15 +71,26 @@ export async function processPendingJobs() {
       }
       console.log(`Created ${subs.length} deliveries for job ${job.id}`);
 
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      console.error({
-        message: "Job failed",
-        jobId: job.id,
-        error: errorMessage
-        });
-      await db.update(jobs).set({ status: "failed" }).where(eq(jobs.id, job.id));
-    }
+    } catch (err: any) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        const newAttempts = job.attempts + 1;
+        if (newAttempts >= MAX_JOB_RETRIES) {
+          console.error(`Job ${job.id} permanently failed: ${errorMessage}`);
+        await db.update(jobs).set({
+          status: "failed",
+          attempts: newAttempts,
+          result: {
+            error:errorMessage
+          }
+        }).where(eq(jobs.id, job.id));
+  } else {
+    console.log(`Retrying job ${job.id} after error (attempt ${newAttempts})`);
+    await db.update(jobs).set({
+      status: "pending",
+      attempts: newAttempts,
+    }).where(eq(jobs.id, job.id));
+  }
+}
   }
 }
 
