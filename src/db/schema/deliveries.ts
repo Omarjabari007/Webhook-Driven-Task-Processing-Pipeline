@@ -1,4 +1,4 @@
-import {pgTable , uuid , timestamp , integer , text} from "drizzle-orm/pg-core"
+import {pgTable , uuid , timestamp , integer , text, index} from "drizzle-orm/pg-core"
 import {jobs} from "./index.ts"
 import {subscribers} from "./index.ts"
 import { deliveryStatus } from "./statusEnum.ts"
@@ -12,7 +12,12 @@ export const deliveries = pgTable("deliveries" , {
     lastError: text("last_error"),
     nextRetryAt: timestamp("next_retry_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+},(table) => ({
+    statusIdx: index("deliveries_status_idx").on(table.status),
+    jobIdx: index("deliveries_job_id_idx").on(table.jobId),
+    retryIdx: index("deliveries_next_retry_idx").on(table.nextRetryAt),
+})
+);
 
 export type Delivery = typeof deliveries.$inferSelect;
 export type NewDelivery = typeof deliveries.$inferInsert;

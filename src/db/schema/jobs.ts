@@ -1,4 +1,4 @@
-import {pgTable , uuid , jsonb , timestamp , integer} from "drizzle-orm/pg-core"
+import {pgTable , uuid , jsonb , timestamp , integer, index} from "drizzle-orm/pg-core"
 import { webhookEvents } from "./index.ts"
 import { jobStatus } from "./statusEnum.ts"
 
@@ -10,7 +10,11 @@ export const jobs = pgTable("jobs", {
     result: jsonb("result"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     processedAt: timestamp("processed_at"),
-});
+},(table) => ({
+    statusIdx: index("jobs_status_idx").on(table.status),
+    eventIdx: index("jobs_event_id_idx").on(table.eventId),
+})
+);
 
 export type Job = typeof jobs.$inferSelect;
 export type NewJob = typeof jobs.$inferInsert;
