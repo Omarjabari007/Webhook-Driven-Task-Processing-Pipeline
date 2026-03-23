@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "worker": "tsx src/modules/workers/worker.ts"
+    "worker": "tsx src/modules/workers/worker.ts",
+    "sign": "tsx scripts/generate-signature.ts"
   },
   "repository": {
     "type": "git",
