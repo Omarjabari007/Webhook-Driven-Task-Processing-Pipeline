@@ -10,6 +10,7 @@ export const deliveries = pgTable("deliveries" , {
     status: deliveryStatus("status").default("pending").notNull(),
     attempts: integer("attempts").default(0).notNull(),
     lastError: text("last_error"),
+    nextRetryAt: timestamp("next_retry_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

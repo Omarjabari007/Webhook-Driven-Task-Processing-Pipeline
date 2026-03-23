@@ -11,4 +11,5 @@ export const deliveryStatus = pgEnum("delivery_status" , [
     "pending",
     "success",
     "failed",
+    "dead"
 ]);
