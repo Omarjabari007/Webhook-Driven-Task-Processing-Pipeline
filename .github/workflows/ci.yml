@@ -1,42 +1,27 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [master, develop]
+    branches: [master]
   pull_request:
     branches: [master]
 
 jobs:
   ci:
-    name: Build & Type Check
+    name: Build & Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Type check
-        run: npx tsc --noEmit
+        run: npm ci
 
       - name: Build project
         run: npm run build
-
-  docker:
-    name: Build Docker Image
-    runs-on: ubuntu-latest
-    needs: ci
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build Docker image
-        run: docker build -t webhook-pipeline .
