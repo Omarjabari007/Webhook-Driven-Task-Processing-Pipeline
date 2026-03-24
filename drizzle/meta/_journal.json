@@ -57,6 +57,13 @@
       "when": 1774273073942,
       "tag": "0007_eager_dreaming_celestial",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1774363201160,
+      "tag": "0008_slim_pete_wisdom",
+      "breakpoints": true
     }
   ]
 }
