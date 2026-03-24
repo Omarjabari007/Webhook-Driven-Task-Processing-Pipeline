@@ -290,7 +290,7 @@ docker compose up --build
 
 ---
 
-### Configuration
+### Configuration .env
 
 | Variable       | Description       |
 | -------------- | ----------------- |
@@ -437,6 +437,7 @@ src/
 │   ├── logger.ts
 │   └── format.ts
 ---
+```
 
 ## Requirements Fulfilled
 
@@ -486,4 +487,7 @@ src/
 - Dead-letter queue
 
 ---
+
+```
+
 ```
