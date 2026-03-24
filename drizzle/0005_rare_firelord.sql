@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "unique_pipeline_url" ON "subscribers" USING btree ("pipeline_id","url");
