@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { getJobsController , getJobByIdController , 
-getJobDeliveriesController, replayJobController } from "./jobs.controller.ts";
+getJobDeliveriesController, replayJobController } from "./jobs.controller.js";
 
-import { asyncHandler } from "../../utils/asyncHandler.ts";
-import { validate } from "../../middlewares/validate.middleware.ts";
-import { jobIdSchema } from "./jobs.schema.ts";
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import { validate } from "../../middlewares/validate.middleware.js";
+import { jobIdSchema } from "./jobs.schema.js";
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getMetricsController } from "./metrics.controller.ts";
-import { asyncHandler } from "../../utils/asyncHandler.ts";
+import { getMetricsController } from "./metrics.controller.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
 
 const router = Router();
 

@@ -1,9 +1,9 @@
-import { db } from "../../db/index.ts";
-import { pipelines } from "../../db/schema/pipelines.ts";
-import { webhookEvents } from "../../db/schema/webhookEvents.ts";
-import { jobs } from "../../db/schema/jobs.ts";
+import { db } from "../../db/index.js";
+import { pipelines } from "../../db/schema/pipelines.js";
+import { webhookEvents } from "../../db/schema/webhookEvents.js";
+import { jobs } from "../../db/schema/jobs.js";
 import { eq } from "drizzle-orm";
-import { AppError } from "../../utils/AppError.ts";
+import { AppError } from "../../utils/AppError.js";
 
 export async function handleWebhook(sourcePath: string, payload: any) {
     const [pipeline] = await db.select().from(pipelines).where(eq(pipelines.sourcePath, sourcePath));

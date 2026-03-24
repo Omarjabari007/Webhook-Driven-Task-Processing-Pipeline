@@ -1,11 +1,10 @@
-import { db } from "../../db/index.ts";
-import { deliveries } from "../../db/schema/deliveries.ts";
-import { subscribers } from "../../db/schema/subscribers.ts";
-import { jobs } from "../../db/schema/jobs.ts";
+import { db } from "../../db/index.js";
+import { deliveries } from "../../db/schema/deliveries.js";
+import { subscribers } from "../../db/schema/subscribers.js";
+import { jobs } from "../../db/schema/jobs.js";
 import fetch from "node-fetch";
-import type { MatchSummaryResult } from "./types.ts";
-import { getBackoffDelay } from "../../utils/backoff.ts";
-import type { JobResult } from "./types.ts";
+import { getBackoffDelay } from "../../utils/backoff.js";
+import type { JobResult } from "./types.js";
 import { eq, and, lte, isNull, or } from "drizzle-orm";
 
 

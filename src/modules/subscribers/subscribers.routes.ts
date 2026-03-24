@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { createSubscriberController , getSubscribersController , deleteSubscriberController} from "./subscribers.controller.ts";
+import { createSubscriberController , getSubscribersController , deleteSubscriberController} from "./subscribers.controller.js";
 
-import { validate } from "../../middlewares/validate.middleware.ts";
-import { asyncHandler } from "../../utils/asyncHandler.ts";
+import { validate } from "../../middlewares/validate.middleware.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
 
-import { SubscriberCreationSchema , subscriberIdSchema , pipelineIdSchema} from "./subscribers.schema.ts";
+import { SubscriberCreationSchema , subscriberIdSchema , pipelineIdSchema} from "./subscribers.schema.js";
 
 const router = Router();
 

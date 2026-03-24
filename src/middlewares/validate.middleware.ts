@@ -1,6 +1,6 @@
 import type { z, ZodSchema, ZodTypeAny } from "zod";
 import type { Request , Response , NextFunction } from "express";
-import { AppError } from "../utils/AppError.ts";
+import { AppError } from "../utils/AppError.js";
 
 type RequestSchema = {
   body?: unknown;

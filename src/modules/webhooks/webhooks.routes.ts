@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { webhookController } from "./webhooks.controller.ts";
-import { validate } from "../../middlewares/validate.middleware.ts";
-import { asyncHandler } from "../../utils/asyncHandler.ts";
-import { webhookSchema } from "./webhooks.schema.ts";
-import { rateLimit } from "../../middlewares/rateLimit.middleware.ts";
+import { webhookController } from "./webhooks.controller.js";
+import { validate } from "../../middlewares/validate.middleware.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import { webhookSchema } from "./webhooks.schema.js";
+import { rateLimit } from "../../middlewares/rateLimit.middleware.js";
 
 const router = Router();
 

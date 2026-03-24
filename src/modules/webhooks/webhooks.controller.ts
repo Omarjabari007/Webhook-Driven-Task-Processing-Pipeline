@@ -1,6 +1,6 @@
 import type { Request , Response } from "express";
-import { handleWebhook } from "./webhooks.service.ts";
-import { verifySignature } from "../../utils/signature.ts";
+import { handleWebhook } from "./webhooks.service.js";
+import { verifySignature } from "../../utils/signature.js";
 
 export async function webhookController(req : Request , res : Response) {
     const signature = req.headers["x-signature"] as string;

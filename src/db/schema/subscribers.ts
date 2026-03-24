@@ -1,5 +1,5 @@
 import {pgTable, uuid, text , timestamp ,uniqueIndex} from "drizzle-orm/pg-core"
-import { pipelines } from "./index.ts"
+import { pipelines } from "./index.js"
 
 export const subscribers = pgTable("subscribers" , {
     id: uuid("id").defaultRandom().primaryKey(),

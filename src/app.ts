@@ -1,12 +1,12 @@
 import express from "express";
 import { db } from "./db/index.js";
 import { sql } from "drizzle-orm";
-import pipelinesRoutes from "./modules/pipelines/pipelines.routes.ts"
-import { errorMiddleware } from "./middlewares/error.middleware.ts";
-import subsriberRoutes from "./modules/subscribers/subscribers.routes.ts";
-import webhookRoutes from "./modules/webhooks/webhooks.routes.ts";
-import jobRoutes from "./modules/jobs/jobs.routes.ts";
-import metricsRoutes from "./modules/metrics/metrics.routes.ts";
+import pipelinesRoutes from "./modules/pipelines/pipelines.routes.js"
+import { errorMiddleware } from "./middlewares/error.middleware.js";
+import subsriberRoutes from "./modules/subscribers/subscribers.routes.js";
+import webhookRoutes from "./modules/webhooks/webhooks.routes.js";
+import jobRoutes from "./modules/jobs/jobs.routes.js";
+import metricsRoutes from "./modules/metrics/metrics.routes.js";
 
 const app = express();
 

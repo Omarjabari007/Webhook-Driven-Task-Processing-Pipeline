@@ -1,10 +1,10 @@
-import { db } from "../../db/index.ts";
-import { subscribers } from "../../db/schema/subscribers.ts";
-import {pipelines} from "../../db/schema/pipelines.ts"
+import { db } from "../../db/index.js";
+import { subscribers } from "../../db/schema/subscribers.js";
+import {pipelines} from "../../db/schema/pipelines.js"
 import { eq } from "drizzle-orm";
-import { AppError } from "../../utils/AppError.ts";
+import { AppError } from "../../utils/AppError.js";
 
-import type { CreateSubscriberDTO , SubscriberResponse } from "./subscribers.type.ts";
+import type { CreateSubscriberDTO , SubscriberResponse } from "./subscribers.type.js";
 
 export async function createSubscriber( pipelineId: string, data: CreateSubscriberDTO
 ): Promise<SubscriberResponse> {

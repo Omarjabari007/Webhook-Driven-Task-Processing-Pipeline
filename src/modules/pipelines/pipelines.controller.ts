@@ -1,5 +1,5 @@
 import type { Request , Response } from "express";
-import {createPipeline , getPipelines , getPipelineById , deletePipeline} from "./pipelines.service.ts"
+import {createPipeline , getPipelines , getPipelineById , deletePipeline} from "./pipelines.service.js"
 
 export async function createPipelineController(req : Request , res : Response){
         const pipeline = await createPipeline(req.body)

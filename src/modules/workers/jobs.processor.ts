@@ -1,12 +1,12 @@
-import { db } from "../../db/index.ts";
-import { jobs } from "../../db/schema/jobs.ts";
-import { webhookEvents } from "../../db/schema/webhookEvents.ts";
-import { pipelines } from "../../db/schema/pipelines.ts";
-import { subscribers } from "../../db/schema/subscribers.ts";
-import { deliveries } from "../../db/schema/deliveries.ts";
+import { db } from "../../db/index.js";
+import { jobs } from "../../db/schema/jobs.js";
+import { webhookEvents } from "../../db/schema/webhookEvents.js";
+import { pipelines } from "../../db/schema/pipelines.js";
+import { subscribers } from "../../db/schema/subscribers.js";
+import { deliveries } from "../../db/schema/deliveries.js";
 
 import { eq } from "drizzle-orm"; 
-import { actions } from "../actions/index.ts";
+import { actions } from "../actions/index.js";
 const MAX_JOB_RETRIES = 3;
 
 export async function processPendingJobs() {

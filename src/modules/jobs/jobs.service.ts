@@ -1,9 +1,9 @@
-import { db } from "../../db/index.ts";
-import { jobs } from "../../db/schema/jobs.ts";
-import { deliveries } from "../../db/schema/deliveries.ts";
+import { db } from "../../db/index.js";
+import { jobs } from "../../db/schema/jobs.js";
+import { deliveries } from "../../db/schema/deliveries.js";
 
 import { eq } from "drizzle-orm";
-import { AppError } from "../../utils/AppError.ts";
+import { AppError } from "../../utils/AppError.js";
 
 export async function getJobs() {
   return db.select().from(jobs);

@@ -1,5 +1,5 @@
 import {pgTable , uuid, jsonb , timestamp} from "drizzle-orm/pg-core"
-import {pipelines} from "./index.ts"
+import {pipelines} from "./index.js"
 
 export const webhookEvents = pgTable("webhook_events", {
     id: uuid("id").defaultRandom().primaryKey(),

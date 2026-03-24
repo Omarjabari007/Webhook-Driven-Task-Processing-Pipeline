@@ -1,6 +1,6 @@
-import { db } from "../../db/index.ts";
-import { jobs } from "../../db/schema/jobs.ts";
-import { deliveries } from "../../db/schema/deliveries.ts";
+import { db } from "../../db/index.js";
+import { jobs } from "../../db/schema/jobs.js";
+import { deliveries } from "../../db/schema/deliveries.js";
 import { count, eq } from "drizzle-orm";
 
 export async function getMetrics() {

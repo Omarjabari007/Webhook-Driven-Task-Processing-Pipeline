@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { createPipelineController ,getPipelineByIdController , getPipelinesController,deletePipelineController } from "./pipelines.controller.ts";
-import { asyncHandler } from "../../utils/asyncHandler.ts";
-import { validate } from "../../middlewares/validate.middleware.ts";
-import { PipelineCreationSchema , pipelineIdSchema } from "./pipelines.schema.ts";
+import { createPipelineController ,getPipelineByIdController , getPipelinesController,deletePipelineController } from "./pipelines.controller.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
+import { validate } from "../../middlewares/validate.middleware.js";
+import { PipelineCreationSchema , pipelineIdSchema } from "./pipelines.schema.js";
 
 const router = Router()
 

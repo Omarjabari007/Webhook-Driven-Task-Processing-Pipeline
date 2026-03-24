@@ -1,5 +1,5 @@
 import type { PipelineResponse , PipelineConfig ,pipelineActionType } 
-from "../modules/pipelines/pipelines.types.ts";
+from "../modules/pipelines/pipelines.types.js";
 
 export function mapPipeline(row: any): PipelineResponse {
     return {

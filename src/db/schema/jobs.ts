@@ -1,6 +1,6 @@
 import {pgTable , uuid , jsonb , timestamp , integer, index} from "drizzle-orm/pg-core"
-import { webhookEvents } from "./index.ts"
-import { jobStatus } from "./statusEnum.ts"
+import { webhookEvents } from "./index.js"
+import { jobStatus } from "./statusEnum.js"
 
 export const jobs = pgTable("jobs", {
     id: uuid("id").defaultRandom().primaryKey(),

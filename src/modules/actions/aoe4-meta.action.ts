@@ -1,7 +1,7 @@
-import { db } from "../../db/index.ts";
-import { jobs } from "../../db/schema/jobs.ts";
+import { db } from "../../db/index.js";
+import { jobs } from "../../db/schema/jobs.js";
 import { eq } from "drizzle-orm";
-import { formatCiv } from "../../utils/format.ts";
+import { formatCiv } from "../../utils/format.js";
 
 const MAX_JOB_RETRIES = 5;
 

@@ -1,10 +1,10 @@
-import {db} from "../../db/index.ts"
-import {pipelines} from "../../db/schema/pipelines.ts"
-import { mapPipeline } from "../../mappers/pipeline.mapper.ts"
+import {db} from "../../db/index.js"
+import {pipelines} from "../../db/schema/pipelines.js"
+import { mapPipeline } from "../../mappers/pipeline.mapper.js"
 import { eq } from "drizzle-orm"
 
-import type { CreatePipelineDTO , PipelineResponse } from "./pipelines.types.ts"
-import { AppError } from "../../utils/AppError.ts"
+import type { CreatePipelineDTO , PipelineResponse } from "./pipelines.types.js"
+import { AppError } from "../../utils/AppError.js"
 
 export async function createPipeline(data:CreatePipelineDTO): Promise<PipelineResponse>{
     const result = await db.insert(pipelines)

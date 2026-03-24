@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { getJobs, getJobById, getJobDeliveries, replayJob } from "./jobs.service.ts";
+import { getJobs, getJobById, getJobDeliveries, replayJob } from "./jobs.service.js";
 
 export async function getJobsController(req: Request, res: Response) {
   const data = await getJobs();
