@@ -7,6 +7,7 @@ import type { CreatePipelineDTO , PipelineResponse } from "./pipelines.types.js"
 import { AppError } from "../../utils/AppError.js"
 
 export async function createPipeline(data:CreatePipelineDTO): Promise<PipelineResponse>{
+    try{
     const result = await db.insert(pipelines)
     .values({
         name: data.name,
@@ -20,6 +21,14 @@ export async function createPipeline(data:CreatePipelineDTO): Promise<PipelineRe
         throw new AppError("Failed to create pipeline" , 500);
     }
     return mapPipeline(pipeline);
+} catch(err: any){
+    const code = err.code || err.cause?.code;
+    if(code === "23505"){
+        throw new AppError(`Pipeline with sourcePath "${data.sourcePath}" already exists`,409);
+    }
+    throw err;
+}
+
 } 
 
 export async function getPipelines() : Promise<PipelineResponse[]> {
