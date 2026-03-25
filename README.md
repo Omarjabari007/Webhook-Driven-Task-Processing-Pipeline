@@ -271,41 +271,128 @@ Tradeoff:
 
 ---
 
+# Webhook-Driven Task Processing Pipeline
+
 ## Getting Started
 
 ### Requirements
 
-- Docker
+**For Windows:**
+
+- Docker Desktop
 - Git
+
+**Optional:**
+
+- Node.js 22+
+  _(Only needed if you want to run the local signing script for testing)_
+
+> **Note:** Node.js is **NOT required** to run the app using Docker Compose.
 
 ---
 
-### Setup
+## Setup
 
 ```bash
 git clone https://github.com/Omarjabari007/Webhook-Driven-Task-Processing-Pipeline.git
 cd Webhook-Driven-Task-Processing-Pipeline
+```
+
+---
+
+## Environment Configuration
+
+Create a `.env` file in the project root:
+
+```env
+PORT=3000
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=webhook_db
+DATABASE_URL=postgresql://postgres:postgres@webhook-psql:5432/webhook_db
+WEBHOOK_SECRET=secret123
+```
+
+---
+
+## Run the Application
+
+```bash
 docker compose up --build
 ```
 
 ---
 
-### Configuration .env
+## Verify the App is Running
 
-| Variable       | Description       |
-| -------------- | ----------------- |
-| PORT           | API port          |
-| DB_USER        | DB username       |
-| DB_PASSWORD    | DB password       |
-| DB_NAME        | DB name           |
-| DATABASE_URL   | connection string |
-| WEBHOOK_SECRET | HMAC secret       |
+Open in browser:
+
+```
+http://localhost:3000/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "ok"
+}
+```
+
+---
+
+## Important Notes
+
+- You **must create** a `.env` file before running Docker.
+- Inside Docker, the database hostname is:
+
+```
+webhook-psql
+```
+
+---
+
+## Optional: Local Signature Generation (Testing)
+
+If you want to test signed webhook requests locally:
+
+```bash
+npm install
+```
+
+Then run:
+
+```bash
+npm run sign "{\"map\":\"Rocky River\"}"
+```
+
+---
+
+## Troubleshooting
+
+### `.env` file not found
+
+Make sure you created a `.env` file before running:
+
+```bash
+docker compose up --build
+```
+
+---
+
+### `tsx is not recognized`
+
+Run:
+
+```bash
+npm install
+```
 
 ---
 
 ## API Example (Full Flow)
 
-### 1. Create Pipeline
+### Create Pipeline
 
 ```bash
 curl -X POST http://localhost:3000/pipelines \
@@ -317,28 +404,54 @@ curl -X POST http://localhost:3000/pipelines \
 }'
 ```
 
+📌 **Response will include an `id`** — this is your **pipeline ID**
+You will use it in the next step.
+
+Example:
+
+```json
+{
+  "id": "123e4567-abc-xyz"
+}
+```
+
 ---
 
-### 2. Add Subscriber
+### Add Subscriber
+
+Replace `<pipeline_id>` with your actual pipeline ID:
 
 ```bash
-curl -X POST http://localhost:3000/pipelines/<id>/subscribers \
+curl -X POST http://localhost:3000/pipelines/<pipeline_id>/subscribers \
 -H "Content-Type: application/json" \
 -d '{
-  "url": "https://discord.com/api/webhooks/..."
+  "url": "https://discord.com/api/webhooks/PUT_YOUR_WEBHOOK_HERE"
 }'
 ```
 
-Supports **Discord webhook integration**
-by formatting payload as:
+### Discord Integration
 
-{
-"content": "<message>"
-}
+- Go to your Discord server → Channel Settings → Integrations → Webhooks
+- Create a webhook and copy the URL
+- Replace:
+
+```text
+PUT_YOUR_WEBHOOK_HERE
+```
 
 ---
 
-### 3. Generate Signature
+### Payload Format (for Discord)
+
+```json
+{
+  "content": "<message>"
+}
+```
+
+---
+
+### Generate Signature
 
 ```bash
 npm install
@@ -347,7 +460,7 @@ npm run sign "{\"map\":\"Rocky River\"}"
 
 ---
 
-### 4. Send Webhook
+### Send Webhook
 
 ```bash
 curl -X POST http://localhost:3000/webhooks/aoe4-meta \
@@ -358,7 +471,140 @@ curl -X POST http://localhost:3000/webhooks/aoe4-meta \
 
 ---
 
-### 5. Check subscriber
+### Check Subscriber
+
+Go to your Discord channel and verify the message was received
+
+---
+
+## Notes About `curl` (Windows vs Linux)
+
+### Windows (CMD)
+
+Use `^` for multi-line commands:
+
+```bash
+curl -X POST http://localhost:3000/pipelines ^
+-H "Content-Type: application/json" ^
+-d "{\"name\":\"Meta\",\"sourcePath\":\"aoe4-meta\",\"actionType\":\"aoe4_meta\"}"
+```
+
+---
+
+### Linux / macOS
+
+Use `\` instead:
+
+```bash
+curl -X POST http://localhost:3000/pipelines \
+-H "Content-Type: application/json" \
+-d '{"name":"Meta","sourcePath":"aoe4-meta","actionType":"aoe4_meta"}'
+```
+
+---
+
+### Universal (One-line, works everywhere)
+
+```bash
+curl -X POST http://localhost:3000/pipelines -H "Content-Type: application/json" -d "{\"name\":\"Meta\",\"sourcePath\":\"aoe4-meta\",\"actionType\":\"aoe4_meta\"}"
+```
+
+---
+
+## Tips
+
+- Always replace:
+  - `<pipeline_id>` → with your actual pipeline ID
+  - `PUT_YOUR_WEBHOOK_HERE` → with your Discord webhook URL
+
+- If something fails, try the **one-line curl version** to avoid shell issues
+
+---
+
+## Summary
+
+This project allows you to:
+
+- Create pipelines
+- Attach subscribers
+- Process webhook events
+- Deliver processed results (e.g. to Discord)
+
+---
+
+## Additional Endpoints to check :
+
+### Health Check
+
+---
+
+```bash
+GET:  http://localhost:3000/health
+```
+
+---
+
+### Metrics Check
+
+```bash
+GET:  http://localhost:3000/metrics
+```
+
+---
+
+### Pipelines
+
+```bash
+GET: http://localhost:3000/pipelines
+```
+
+```bash
+GET: http://localhost:3000/pipelines/<pipeline-id>
+DELETE: http://localhost:3000/pipelines/<pipeline-id>
+```
+
+Note: For delete pipeline : **_be sure to delete subscribers and jobs from that pipelines first_**
+
+---
+
+### Subscirbers for specific pipelind id
+
+```bash
+GET: http://localhost:3000/pipelines/<pipeline-id>/subscribers
+DELETE: http://localhost:3000/pipelines/<pipeline-id>/subscribers
+```
+
+---
+
+---
+
+### Jobs
+
+```bash
+GET: http://localhost:3000/jobs
+```
+
+```bash
+GET: http://localhost:3000/jobs/<id>
+```
+
+---
+
+### Deliveries
+
+```bash
+GET: http://localhost:3000/jobs/<job-id>/deliveries
+```
+
+---
+
+### Replay System
+
+```bash
+POST: http://localhost:3000/jobs/<job-id>/replay
+```
+
+---
 
 ## Project Structure
 
