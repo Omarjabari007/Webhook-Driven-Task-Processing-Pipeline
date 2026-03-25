@@ -1,7 +1,7 @@
 import {pgTable , uuid , timestamp , integer , text, index} from "drizzle-orm/pg-core"
-import {jobs} from "./index.js"
-import {subscribers} from "./index.js"
-import { deliveryStatus } from "./statusEnum.js"
+import {jobs} from "./jobs.ts"
+import {subscribers} from "./subscribers.ts"
+import { deliveryStatus } from "./statusEnum.ts"
 
 export const deliveries = pgTable("deliveries" , {
     id: uuid("id").defaultRandom().primaryKey(),

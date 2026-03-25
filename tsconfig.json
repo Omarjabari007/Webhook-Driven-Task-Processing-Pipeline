@@ -41,6 +41,7 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+    "rewriteRelativeImportExtensions": true,
 },
   "include": ["src"],
   "exclude": ["node_modules","dist","scripts","drizzle.config.ts"]
