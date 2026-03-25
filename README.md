@@ -680,7 +680,6 @@ src/
 │   ├── asyncHandler.ts
 │   ├── backoff.ts
 │   ├── signature.ts
-│   ├── logger.ts
 │   └── format.ts
 ---
 ```
