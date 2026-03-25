@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install -y python3 make g++ \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
@@ -19,7 +18,9 @@ WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY package*.json ./
+COPY --from=builder /app/drizzle ./drizzle
+COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
+COPY --from=builder /app/package*.json ./
 
 EXPOSE 3000
 
