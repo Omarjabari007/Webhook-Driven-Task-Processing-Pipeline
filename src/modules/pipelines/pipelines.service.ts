@@ -53,7 +53,7 @@ export async function deletePipeline(id : string): Promise<void> {
     } catch (err : any){
         const code = err.code || err.cause?.code;
         if(code === "23503"){
-            throw new AppError("Cannot delete pipeline, Remove all subscribers first.",400)
+            throw new AppError("Cannot delete pipeline, Remove related subscribers, jobs, and deliveries first",400)
         }
         throw err;
     }

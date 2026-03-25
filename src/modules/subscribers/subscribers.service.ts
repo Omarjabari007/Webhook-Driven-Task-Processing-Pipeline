@@ -1,6 +1,7 @@
 import { db } from "../../db/index.js";
 import { subscribers } from "../../db/schema/subscribers.js";
 import {pipelines} from "../../db/schema/pipelines.js"
+import { deliveries } from "../../db/schema/deliveries.js";
 import { eq } from "drizzle-orm";
 import { AppError } from "../../utils/AppError.js";
 
@@ -40,8 +41,14 @@ export async function getSubscriberByPipeline(pipelineId: string): Promise<Subsc
 }
 
 export async function deleteSubscriber(id: string): Promise<void> {
+  try{
+    await db.delete(deliveries).where(eq(deliveries.subscriberId, id));
     const result = await db.delete(subscribers).where(eq(subscribers.id,id)).returning();
     if(result.length === 0){
         throw new AppError("Subscriber not found" , 404);
     }
+  }catch(err : any){
+    throw new AppError("Failed to delete subscriber",500);
+  }
+    
 }
