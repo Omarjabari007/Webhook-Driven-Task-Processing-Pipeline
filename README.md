@@ -14,7 +14,7 @@ A production-style backend system that ingests webhooks, processes them asynchro
 | Database         | PostgreSQL              |
 | ORM              | Drizzle ORM             |
 | Validation       | Zod                     |
-| Security         | (bcrypt, HMAC)          |
+| Security         | HMAC                    |
 | Containerization | Docker + Docker Compose |
 | CI/CD            | GitHub Actions          |
 
@@ -109,14 +109,14 @@ I used AOE4 external API to fetch data from the game database and used it in my 
 
 ### Failure Scenarios & Handling
 
-| Scenario             | System Behavior                                        |
-| -------------------- | ------------------------------------------------------ |
-| Missing signature    | Request rejected with 401 (early return in controller) |
-| Invalid signature    | Request rejected with 403                              |
-| External API failure | Job marked pending and retried                         |
-| Subscriber failure   | Delivery retried with backoff                          |
-| Max retries reached  | Delivery marked as `dead`                              |
-| Worker crash         | Jobs remain `pending` and reprocessed                  |
+| Scenario                       | System Behavior                                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| Missing signature              | Request rejected with 401 (early return in controller)                                                             |
+| Invalid signature              | Request rejected with 403                                                                                          |
+| External API failure           | Job marked pending and retried                                                                                     |
+| Subscriber failure             | Delivery retried with backoff                                                                                      |
+| Max retries reached            | Delivery marked as `dead`                                                                                          |
+| Worker crash during processing | Pending jobs will be retried on the next poll, but jobs already marked processing may require a stale-job recovery |
 
 ---
 
@@ -152,7 +152,7 @@ This ensures:
 
 ### Rate Limiting
 
-- Per `sourcePath` or IP
+- Per `sourcePath`
 - Prevents abuse
 
 ---
@@ -308,8 +308,8 @@ Create a `.env` file in the project root:
 PORT=3000
 DB_USER=postgres
 DB_PASSWORD=postgres
-DB_NAME=webhook_db
-DATABASE_URL=postgresql://postgres:postgres@webhook-psql:5432/webhook_db
+DB_NAME=webhook_pipeline
+DATABASE_URL=postgres://postgres:postgres@postgres:5432/webhook_pipeline
 WEBHOOK_SECRET=secret123
 ```
 
@@ -567,11 +567,11 @@ Note: For delete pipeline : **_be sure to delete subscribers and jobs from that 
 
 ---
 
-### Subscirbers for specific pipelind id
+### Subscribers for specific pipeline id
 
 ```bash
 GET: http://localhost:3000/pipelines/<pipeline-id>/subscribers
-DELETE: http://localhost:3000/pipelines/<pipeline-id>/subscribers
+DELETE: http://localhost:3000/subscribers/<subscribers-id>
 ```
 
 ---
@@ -585,7 +585,7 @@ GET: http://localhost:3000/jobs
 ```
 
 ```bash
-GET: http://localhost:3000/jobs/<id>
+GET: http://localhost:3000/jobs/<job-id>
 ```
 
 ---
